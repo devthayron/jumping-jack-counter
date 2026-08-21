@@ -3,39 +3,43 @@
 Sistema desenvolvido em Python capaz de **detectar os movimentos corporais e contar automaticamente os polichinelos realizados**.
 
 O projeto utiliza detecção de pose para acompanhar os movimentos do corpo e identificar quando uma repetição é realizada.
-
 ## 🎥 Demonstração
 
 ![Demonstração do contador de polichinelos](assets/demo.gif)
 
-O vídeo é analisado frame a frame, utilizando principalmente a posição das **mãos, pés e ombros** para identificar o movimento.
+### Como funciona
 
-Um detalhe importante é que as distâncias são **normalizadas pela distância entre os ombros**, ajudando a tornar a detecção menos dependente da distância da pessoa em relação à câmera.
+O vídeo é analisado frame a frame pelo **MediaPipe Pose Landmarker**, que identifica os principais pontos do corpo. A partir deles, o sistema analisa:
 
-## Como funciona
+- **Ângulo dos braços:** identifica se os braços estão fechados ou abertos.
+- **Posição das mãos:** verifica se estão acima da cabeça, ajudando a confirmar a posição aberta.
+- **Distância entre os pés:** verifica se as pernas estão próximas ou afastadas. 
 
-O **MediaPipe Pose Landmarker** identifica os principais pontos do corpo no vídeo.
+Com essas informações, o sistema identifica duas posições:
 
-A partir desses pontos, o sistema calcula as distâncias entre mãos, pés e ombros e utiliza essas informações para identificar as diferentes posições do polichinelo.
+- `closed` — braços fechados e pernas próximas.
+- `open` — braços abertos, pernas afastadas e mãos acima da cabeça.
 
-Quando a sequência esperada do movimento é identificada, o contador é atualizado automaticamente.
+O sistema acompanha a sequência `closed → open → closed`. Quando essa sequência é concluída, uma repetição é contabilizada.
+
 
 ## Tecnologias
 
-* Python
-* OpenCV
-* MediaPipe
+- Python
+- OpenCV
+- MediaPipe
 
 ## 📁 Estrutura do projeto
 
 ```text
-contador-polichinelo/
+jumping-jack-counter/
 ├── assets/
 │   └── demo.gif
 ├── models/
 │   └── pose_landmarker_full.task
 ├── videos/
-│   └── polichinelos.mp4
+│   ├── jumping_jacks.mp4
+│   └── jumping_jacks_result.mp4
 ├── config.py
 ├── pose.py
 ├── main.py
